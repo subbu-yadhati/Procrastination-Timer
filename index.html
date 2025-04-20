@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Procrastination Timer</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+  <link rel="stylesheet" href="style.css">
+
+</head>
+<body>
+  <header>
+    <div class="container">
+      <h1><i class="fas fa-clock"></i> Procrastination Timer</h1>
+      <p>Focus. Rest. Get motivated. Repeat.</p>
+    </div>
+  </header>
+  
+  <div class="container">
+    <div class="main-content">
+      <div class="timer-section">
+        <div class="card timer-card">
+          <div class="timer-mode-selector">
+            <div class="mode-btn active" data-mode="focus">Focus</div>
+            <div class="mode-btn" data-mode="short-break">Short Break</div>
+            <div class="mode-btn" data-mode="long-break">Long Break</div>
+          </div>
+          
+          <div class="timer-display-container">
+            <div class="timer-progress">
+              <svg viewBox="0 0 100 100">
+                <circle class="background" cx="50" cy="50" r="45" />
+                <circle class="progress" cx="50" cy="50" r="45" />
+              </svg>
+            </div>
+            <div class="timer-display">
+              <div class="timer-time">25:00</div>
+              <div class="timer-status">Ready to focus</div>
+            </div>
+          </div>
+          
+          <div class="timer-controls">
+            <button id="start-btn" class="primary-btn">
+              <i class="fas fa-play"></i> Start
+            </button>
+            <button id="pause-btn" class="secondary-btn" disabled>
+              <i class="fas fa-pause"></i> Pause
+            </button>
+            <button id="reset-btn" class="danger-btn">
+              <i class="fas fa-undo"></i> Reset
+            </button>
+          </div>
+          
+          <div class="audio-controls">
+            <button class="sound-btn" id="sound-btn" title="Toggle sound">
+              <i class="fas fa-volume-up"></i>
+            </button>
+            <div class="volume-control">
+              <input type="range" min="0" max="100" value="50" class="volume-slider" id="volume-slider">
+            </div>
+          </div>
+        </div>
+        
+        <div class="card stats-card">
+          <h2>Your Progress</h2>
+          <div class="stats-grid">
+            <div class="stat-item">
+              <div class="stat-value" id="sessions-completed">0</div>
+              <div class="stat-label">Sessions Completed</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="daily-streak">0</div>
+              <div class="stat-label">Daily Streak</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="focus-minutes">0</div>
+              <div class="stat-label">Minutes Focused</div>
+            </div>
+            <div class="stat-item">
+              <div class="stat-value" id="todays-sessions">0</div>
+              <div class="stat-label">Today's Sessions</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="sidebar-section">
+        <div class="card settings-card">
+          <h2>Settings</h2>
+          <div class="settings-form">
+            <div class="form-group">
+              <label class="form-label" for="focus-duration">Focus Duration (minutes)</label>
+              <input type="number" id="focus-duration" class="form-control" value="25" min="1" max="60">
+              <div class="form-help">Recommended: 25 minutes</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="short-break-duration">Short Break (minutes)</label>
+              <input type="number" id="short-break-duration" class="form-control" value="5" min="1" max="15">
+              <div class="form-help">Recommended: 5 minutes</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="long-break-duration">Long Break (minutes)</label>
+              <input type="number" id="long-break-duration" class="form-control" value="15" min="5" max="30">
+              <div class="form-help">Recommended: 15 minutes</div>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="auto-start-breaks">Auto-start breaks</label>
+              <input type="checkbox" id="auto-start-breaks" checked>
+            </div>
+            <div class="form-group">
+              <label class="form-label" for="auto-start-work">Auto-start focus sessions</label>
+              <input type="checkbox" id="auto-start-work">
+            </div>
+            <div class="button-group">
+              <button id="save-settings" class="primary-btn">
+                <i class="fas fa-save"></i> Save
+              </button>
+            </div>
+          </div>
+        </div>
+        
+        <div class="card tasks-card">
+          <h2>Focus Tasks</h2>
+          <div class="task-input-group">
+            <input type="text" id="task-input" class="form-control task-input" placeholder="Add a task...">
+            <button id="add-task-btn" class="primary-btn">
+              <i class="fas fa-plus"></i>
+            </button>
+          </div>
+          <div id="tasks-container">
+            <ul class="tasks-list" id="tasks-list">
+              <!-- Tasks will be added here -->
+            </ul>
+            <div class="task-empty-state" id="task-empty-state">
+              <div class="task-empty-icon">
+                <i class="fas fa-tasks"></i>
+              </div>
+              <p>No tasks yet. Add something to focus on!</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <button class="dark-mode-toggle" id="dark-mode-toggle">
+    <i class="fas fa-moon"></i>
+  </button>
+  
+  <div class="motivation-modal" id="motivation-modal">
+    <div class="modal-content">
+      <div class="modal-title">Session Complete!</div>
+      <div id="motivation-content">
+        <!-- Content will be dynamically inserted here -->
+      </div>
+      <div class="session-complete-stats">
+        <div class="session-stat">
+          <div class="session-stat-value" id="modal-sessions-completed">0</div>
+          <div class="session-stat-label">Total Sessions</div>
+        </div>
+        <div class="session-stat">
+          <div class="session-stat-value" id="modal-streak">0</div>
+          <div class="session-stat-label">Day Streak</div>
+        </div>
+      </div>
+      <button class="primary-btn close-modal" id="close-modal">
+        <i class="fas fa-check"></i> Back to Work!
+      </button>
+    </div>
+  </div>
+  
+  <div class="notification" id="notification">
+    <div class="notification-icon">
+      <i class="fas fa-bell"></i>
+    </div>
+    <div class="notification-content">
+      <div class="notification-title" id="notification-title">Title</div>
+      <div class="notification-message" id="notification-message">Message</div>
+    </div>
+    <button class="notification-close" id="notification-close">
+      <i class="fas fa-times"></i>
+    </button>
+  </div>
+  
+  <audio id="timer-end-sound" preload="auto">
+    <source src="data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAEAAABVgANTU1NTU1Q0NDQ0NDUFBQUFBQXl5eXl5ea2tra2tra3l5eXl5eYaGhoaGhpSUlJSUlKGhoaGhoaGvr6+vr6+8vLy8vLzKysrKysrX19fX19fX5eXl5eXl8vLy8vLy////////AAAAAExhdmM1OC4xMwAAAAAAAAAAAAAAACQCgAAAAAAAAAVY82AhbwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYxAALACwAAP/AADwQKVE9YWDGPkQWpT66yk4+zIiYPoTUaT3tnU487uNhOvEmQDacU9NEpwExBMGYdxUK7kGgUAS5Dw4klVAGKi4KLjTx+KN/JzB39NyDguBdCvWZSWmRWXCdUMbZcE3EkEoWXchVzDh/+MYxA8L0DU0AP+0ANkwmYaAMkOKDDjmYoMtwNMyDxMzDHBY/EwELGXGGTCUTNUzmZnh555AViCZKCT6AqP/5P/5/87/UZUqJGMSpP86C///0rKjKShmUGEEEEEEe6qoIIIID/+MYxBsK8DU4AP8WAKqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqqg==">
+  </audio>
+  
+  <footer>
+    <div class="container">
+      &copy; 2025 Procrastination Timer | Designed to help you focus and beat procrastination
+    </div>
+  </footer>
+  
+
+  <script src="script.js"></script>
+</body>
